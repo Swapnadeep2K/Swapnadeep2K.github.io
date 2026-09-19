@@ -1,129 +1,153 @@
-# [YOUR NAME] — personal site
+# Swapnadeep Sarkar — Personal Portfolio
 
-A dependency-free static site: plain HTML, CSS and vanilla JS. No build step,
-no framework, no npm install required. Built to deploy directly to GitHub
-Pages, either at `username.github.io` or `username.github.io/repo-name/`.
+A dependency-free personal portfolio built with plain HTML, CSS, and vanilla JavaScript.
 
-## Structure
+The site presents my work at the intersection of customer data, personalization, and applied AI—turning complex enterprise use cases into scalable solutions. It covers customer-data platforms, journey orchestration, analytics, experimentation, recommendations, decisioning, and practical AI solutions built with MCP integrations and reusable skills.
 
-```
+**Live site:** [swapnadeep2k.github.io](https://swapnadeep2k.github.io/)
+
+## Technology
+
+- Semantic HTML5
+- Custom CSS with responsive layouts and design tokens
+- Vanilla JavaScript
+- GitHub Pages
+- No framework, package manager, or build step
+
+## Site structure
+
+```text
 .
-├── index.html          Home — hero, selected work, about/experience/writing previews, contact CTA
-├── projects.html        Full project list, case-study style
-├── about.html           Long-form about page
-├── experience.html      Full professional + education timeline
-├── writing.html         Articles / notes list
-├── now.html             "What I'm focused on right now" page
-├── contact.html         Contact links + optional message form
-├── css/styles.css       Design tokens (colors, type, spacing) + all styles
-├── js/main.js           Theme toggle, mobile nav, footer year — ~60 lines, no dependencies
-├── assets/favicon.svg   Favicon
+├── index.html                    Home, featured work, profile summary, and contact CTA
+├── projects.html                 Selected work presented as case studies
+├── about.html                    Professional background, expertise, and education
+├── experience.html               Experience, education, certifications, and awards
+├── writing.html                  Articles and technical notes
+├── now.html                      Current areas of focus
+├── contact.html                  Contact details and professional profiles
+├── css/
+│   └── styles.css                Design system, responsive styles, and themes
+├── js/
+│   └── main.js                   Theme toggle, mobile navigation, and footer year
+├── assets/
+│   ├── favicon.svg               Site icon
+│   ├── og-image.png              Social-sharing image
+│   └── resume.pdf                Downloadable résumé
 ├── robots.txt
 ├── sitemap.xml
-├── .nojekyll             Tells GitHub Pages not to run Jekyll on this repo
-└── .github/workflows/deploy.yml   Optional Actions-based deploy (see below)
+├── .nojekyll
+└── .github/
+    └── workflows/
+        └── deploy.yml            Optional GitHub Pages deployment workflow
 ```
+
+## Key features
+
+- Responsive layouts for desktop, tablet, and mobile
+- Light and dark themes with saved visitor preference
+- Mobile navigation with accessible expanded-state handling
+- Semantic page structure and skip-to-content links
+- Reduced-motion support
+- Canonical URLs, metadata, structured data, robots file, and sitemap
+- Case-study-oriented presentation for enterprise work that cannot be published as open source
+- Direct GitHub Pages deployment without compilation
 
 ## Local development
 
-No build tooling needed. Any static file server works, for example:
+No installation or build process is required. Run any static file server from the repository root:
 
 ```bash
-python3 -m http.server 8000
-# then open http://localhost:8000
+python -m http.server 8000
 ```
 
-Or just open `index.html` directly in a browser — all asset paths are
-relative, so it works either way.
+Then open [http://localhost:8000](http://localhost:8000).
 
-## Content status
+The pages can also be opened directly in a browser because internal links and asset paths are relative.
 
-The site is now populated with real content from your resume — name, email,
-GitHub/LinkedIn, Adobe role, AEP/AJO/Target/AEM EDS work, MCP/LLM projects,
-BITS Pilani + VIT education, certifications and awards. `assets/resume.pdf`
-is the resume version those details were pulled from (the one with the MCP/
-Adobe Coworker work and 9.68 CGPA); swap it for an updated file whenever you
-have one, keeping the filename the same so the download link on
-`experience.html` doesn't break.
+## Content areas
 
-A couple of judgment calls worth knowing about, since your three resume
-versions disagreed slightly:
-- **CGPA / graduation month for the M.Tech**: two of three resumes said
-  9.68 CGPA and 03/2026; the third said 9.73 and 05/2026. The site uses
-  9.68 / 2026 — update `about.html` and `experience.html` if 9.73 is correct.
-- **Email**: two of three resumes used `swapnamama90@gmail.com`, one used
-  `swapnamama90@mail.com`. The site uses the `gmail.com` address.
-- **Phone number**: left off the public site by default, since publishing a
-  phone number tends to invite spam calls. Add it to `contact.html`
-  yourself if you want it visible.
-- **`[SITE_URL]`**: set to `https://swapnadeep2k.github.io` as a best guess
-  based on your GitHub username. If you deploy under a project repo instead
-  (`swapnadeep2k.github.io/repo-name`), update the canonical/OG tags in
-  every page's `<head>`, plus `robots.txt` and `sitemap.xml`.
+The portfolio is organized around four connected themes:
 
-### Still worth doing
+1. **Data-driven personalization** — creating relevant customer experiences using unified profiles, audiences, decisioning, and recommendations.
+2. **Scalable solution design** — translating complex business and customer-experience requirements into reusable enterprise solutions.
+3. **Journey orchestration and measurement** — connecting customer data, cross-channel journeys, experimentation, analytics, and optimization.
+4. **Applied AI** — using MCP integrations, reusable AI skills, and agentic workflows to simplify MarTech operations and support strategic decision-making.
 
-| Item | Where | Notes |
-|---|---|---|
-| Project screenshots | index.html, projects.html | replace `<span class="placeholder-fill">[ADD SCREENSHOT]</span>` with real `<img>` tags — this is the highest-impact thing left to do |
-| Hero availability line | index.html | currently just states your role/location; add an availability line if you want one |
-| "Outside of work" line | about.html | one personal detail — the resume doesn't cover this, so it's still a placeholder |
-| Writing entries | writing.html | resume has no blog posts to pull from; add real ones or link out to Medium/Substack/etc. |
-| Now page: reading / thinking about | now.html | two fields left as placeholders — the other two are filled from your current MCP/LLM work |
-| `og-image.png` | referenced in `<head>` of index.html | add a real 1200×630 social preview image to `assets/`, or remove the two `og:image`/`twitter:image` tags |
-| Contact form `[FORM_BACKEND_URL]` | contact.html | GitHub Pages has no server, so the form needs a backend like Formspree or Getform to actually send anywhere — or delete the `<form>` block and keep the `mailto:` link |
-| High-school entry | resume has it, site doesn't | intentionally left off the timeline as not usually relevant to a professional portfolio — add it to experience.html if you'd rather include it |
+## Updating content
+
+Most site content is maintained directly in the corresponding HTML page:
+
+| Content | File |
+|---|---|
+| Homepage introduction and selected work | `index.html` |
+| Project case studies | `projects.html` |
+| Professional profile | `about.html` |
+| Experience and education | `experience.html` |
+| Articles and notes | `writing.html` |
+| Current focus | `now.html` |
+| Contact information | `contact.html` |
+
+To update the downloadable résumé, replace `assets/resume.pdf` while keeping the filename unchanged.
 
 ### Adding a project image
 
-Replace:
+Use an informative alternative-text description and lazy loading for images below the initial viewport:
+
 ```html
-<div class="work-visual"><span class="placeholder-fill">[PROJECT SCREENSHOT]</span></div>
+<div class="work-visual">
+  <img
+    src="assets/projects/project-name.jpg"
+    alt="Description of the interface, workflow, or result shown"
+    loading="lazy"
+  >
+</div>
 ```
-with:
-```html
-<div class="work-visual"><img src="assets/projects/project-one.jpg" alt="[Describe what's shown]" loading="lazy"></div>
-```
-Keep images close to a 16:10 ratio and compress them (e.g. via Squoosh)
-before committing — this is what keeps the Lighthouse performance score high.
 
-## Dark mode
+Use a consistent aspect ratio and compress images before committing them.
 
-Respects the visitor's OS-level `prefers-color-scheme` by default. The
-toggle in the header lets them override it; the choice is remembered via
-`localStorage` where available, and degrades gracefully (session-only) if
-storage is blocked. All color, motion and focus-state rules live in
-`css/styles.css` under `:root` and `[data-theme="dark"]`.
+## Themes and accessibility
 
-## Accessibility & motion
+The site follows the visitor's operating-system theme by default. The header control allows the visitor to override that preference, which is saved in `localStorage` when available.
 
-- Skip-to-content link on every page.
-- Visible focus outlines are never suppressed.
-- All decorative SVGs (`signal-trace`, `signal-divider`, status dot) are
-  `aria-hidden` or purely decorative; icons on interactive elements have
-  `aria-label`s.
-- `prefers-reduced-motion` disables the hero draw-on animation, the status
-  dot pulse, and all transitions site-wide — the site is fully usable and
-  legible with zero motion.
+Accessibility considerations include:
 
-## Deploying to GitHub Pages
+- Skip-to-content links
+- Semantic landmarks and heading structure
+- Keyboard-accessible navigation and controls
+- Visible focus indicators
+- Text alternatives for meaningful images
+- Decorative graphics hidden from assistive technology
+- Support for `prefers-reduced-motion`
 
-**Option A — no Actions, simplest:**
-1. Push this repo to GitHub.
-2. Repo → Settings → Pages → Source: "Deploy from a branch" → `main`, `/ (root)`.
-3. Your site is live at `https://<username>.github.io/<repo-name>/`
-   (or `https://<username>.github.io/` if the repo is named `<username>.github.io`).
+## Deployment
 
-Because every internal link and asset path in this site is relative
-(`css/styles.css`, `projects.html`, not `/css/styles.css`), it works
-correctly under a subpath like `/repo-name/` with zero configuration.
+### Deploy from a branch
 
-**Option B — via GitHub Actions:**
-The included `.github/workflows/deploy.yml` will deploy automatically on
-every push to `main`. To use it, set Settings → Pages → Source to "GitHub
-Actions" instead of "Deploy from a branch." Delete the workflow file if you
-don't want it — Option A alone is sufficient for a site with no build step.
+1. Push the repository to GitHub.
+2. Open **Settings → Pages**.
+3. Select **Deploy from a branch**.
+4. Choose `main` and `/ (root)`.
 
-Either way, once `[SITE_URL]` is known, replace it across all pages
-(`<link rel="canonical">`, Open Graph tags, `robots.txt`, `sitemap.xml`) so
-search engines and social previews resolve correctly.
+### Deploy with GitHub Actions
+
+The optional `.github/workflows/deploy.yml` workflow can deploy the site after every push to `main`. In **Settings → Pages**, select **GitHub Actions** as the source.
+
+Because internal links and assets use relative paths, the site can run from either a user site such as `username.github.io` or a project path such as `username.github.io/repository-name`.
+
+## Before publishing changes
+
+- Remove placeholder copy and inactive links.
+- Confirm project images and their alternative text.
+- Verify that `assets/og-image.png` and the favicon resolve correctly.
+- Confirm canonical URLs in every page.
+- Update `sitemap.xml` when adding or removing pages.
+- Test both themes and the mobile menu.
+- Check the résumé download and all external links.
+
+## Author
+
+**Swapnadeep Sarkar**  
+Technical Consultant at Adobe · Personalization, Customer Data, and Applied AI
+
+- [LinkedIn](https://www.linkedin.com/in/swapnadeep-sarkar/)
+- [GitHub](https://github.com/Swapnadeep2K)

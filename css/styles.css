@@ -307,6 +307,9 @@ a.inline-link:hover { text-decoration-color: var(--color-accent); }
   display: flex;
   flex-direction: column;
   counter-reset: navitem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 .mobile-nav li {
   border-top: var(--border);
@@ -381,10 +384,47 @@ a.inline-link:hover { text-decoration-color: var(--color-accent); }
   position: relative;
   overflow: hidden;
 }
+.hero-grid {
+  display: grid;
+  gap: var(--space-6);
+  align-items: center;
+}
+@media (min-width: 860px) {
+  .hero-grid {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: stretch; /* photo matches the copy block's height */
+  }
+}
+.hero-media {
+  order: -1; /* photo above the copy on small screens */
+  display: flex;
+  justify-content: center;
+}
+@media (min-width: 860px) {
+  .hero-media { order: 0; justify-content: flex-end; }
+}
+.hero-photo {
+  width: 100%;
+  max-width: 15rem; /* mobile: shown at natural ratio, no side cropping */
+  height: auto;
+  border: var(--border);
+  border-radius: 8px;
+  filter: grayscale(1) contrast(1.02);
+  transition: filter var(--dur-med) var(--ease);
+}
+@media (min-width: 860px) {
+  .hero-photo {
+    max-width: 22rem;
+    height: 100%; /* fill from kicker down to the buttons */
+    object-fit: cover;
+    object-position: center top; /* keep the face in frame when cropping */
+  }
+}
+.hero-photo:hover { filter: grayscale(0); }
 .hero-kicker {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-4);
   font-family: var(--font-mono);
   font-size: var(--fs-small);
   color: var(--color-ink-soft);
@@ -420,6 +460,8 @@ a.inline-link:hover { text-decoration-color: var(--color-accent); }
   height: auto;
   margin-block: var(--space-7);
   color: var(--color-accent);
+  overflow: hidden; /* clip the pulse dot at the path's edges — nested SVGs
+                        get this by default, but the outermost one doesn't */
 }
 .signal-trace path {
   fill: none;
@@ -429,13 +471,27 @@ a.inline-link:hover { text-decoration-color: var(--color-accent); }
 }
 @media (prefers-reduced-motion: no-preference) {
   .signal-trace path {
-    stroke-dasharray: 1400;
-    stroke-dashoffset: 1400;
+    /* Actual path length is ~1660 units — 1400 left the draw-in animation
+       finishing short of the true endpoint, which the traveling pulse
+       (driven by the real path geometry) then visibly overshot. */
+    stroke-dasharray: 1700;
+    stroke-dashoffset: 1700;
     animation: draw 1.8s var(--ease) forwards;
     animation-delay: 0.2s;
   }
 }
 @keyframes draw { to { stroke-dashoffset: 0; } }
+
+.signal-pulse {
+  fill: currentColor;
+  filter: drop-shadow(0 0 5px currentColor);
+  opacity: 0; /* stays hidden until its <set> reveals it exactly when animateMotion starts */
+}
+/* SMIL animations aren't covered by the reduced-motion animation-duration
+   override above, so hide the traveling pulses explicitly. */
+@media (prefers-reduced-motion: reduce) {
+  .signal-pulse { display: none; }
+}
 
 .signal-divider {
   width: 100%;
@@ -529,7 +585,6 @@ a.inline-link:hover { text-decoration-color: var(--color-accent); }
 .timeline-role { color: var(--color-muted); font-size: var(--fs-small); margin-bottom: var(--space-3); }
 .timeline-item ul { display: grid; gap: var(--space-2); }
 .timeline-item li { position: relative; padding-left: var(--space-4); color: var(--color-ink-soft); font-size: var(--fs-small); }
-.timeline-item li::before { content: "—"; position: absolute; left: 0; color: var(--color-muted); }
 
 /* ---------- Writing ---------- */
 .writing-list { border-top: var(--border); }
