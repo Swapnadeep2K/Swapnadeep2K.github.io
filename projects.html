@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Work — Swapnadeep Sarkar</title>
+<meta name="description" content="Selected projects by Swapnadeep Sarkar — MarTech, personalization/CDP systems, and applied AI integrations.">
+<link rel="canonical" href="https://swapnadeep2k.github.io/projects.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/main.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-mark" href="index.html">Swapnadeep Sarkar<span>.</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="projects.html" aria-current="page">Work</a>
+      <a href="about.html">About</a>
+      <a href="experience.html">Experience</a>
+      <a href="writing.html">Writing</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <button class="theme-toggle" data-theme-toggle type="button" aria-label="Toggle dark mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19v2.4M4.5 12H2M22 12h-2.5M5.6 5.6l1.7 1.7M16.7 16.7l1.7 1.7M18.4 5.6l-1.7 1.7M7.3 16.7l-1.7 1.7"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/></svg>
+      </button>
+      <button class="nav-toggle" data-nav-toggle type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-nav" id="mobile-nav" data-mobile-nav aria-label="Mobile">
+  <ul>
+    <li><a href="projects.html">Work</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="experience.html">Experience</a></li>
+    <li><a href="writing.html">Writing</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+
+  <section class="wrap" style="padding-block: var(--space-8) var(--space-6);">
+    <p class="label">Work</p>
+    <h1 style="margin-top:var(--space-3)">A few projects worth walking through, rather than a full repository list.</h1>
+    <p class="lede" style="margin-top:var(--space-5)">Most of this is client and internal work built inside enterprise MarTech platforms, so it isn't public in the usual open-source sense — these are written up as case studies rather than linked repos.</p>
+  </section>
+
+  <section class="wrap">
+    <div class="work-list">
+
+      <article class="work-item" id="project-one">
+        <div class="work-visual"><span class="placeholder-fill">[ADD SCREENSHOT]</span></div>
+        <div class="work-body">
+          <h3>MCP-connected marketing assistants</h3>
+          <p class="role">Technical Consultant, Adobe · 2025–Present</p>
+          <p><strong>Problem:</strong> Marketers and consultants working across AJO, AEP, CJA and Target had no direct way to query or act on that data through conversational tools — every check meant switching into each platform's UI.</p>
+          <p><strong>Contribution:</strong> Explored and built MCP integrations connecting those platforms to Claude, ChatGPT and Adobe Coworker, including an internal solution for email-size optimization and Experience Decisioning.</p>
+          <p><strong>Outcome:</strong> Reduced email size by 35–40% when applied to migration projects, and made platform data queryable through natural-language tooling instead of manual UI navigation.</p>
+          <div class="stack-list">
+            <span>MCP</span><span>AJO</span><span>AEP</span><span>CJA</span><span>LLM integration</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="work-item" id="project-two">
+        <div class="work-visual"><span class="placeholder-fill">[ADD SCREENSHOT]</span></div>
+        <div class="work-body">
+          <h3>Experiment Accelerator — Adobe Coworker skills</h3>
+          <p class="role">Technical Consultant, Adobe · 2025</p>
+          <p><strong>Problem:</strong> Marketers running A/B tests through Adobe Target had to piece together past experiment context and sample-size math manually before launching anything new.</p>
+          <p><strong>Contribution:</strong> Designed and shipped two Adobe Coworker skills — a RAG-based Experiment Knowledge Base with vector search over past experiments, and a conversational sample-size calculator.</p>
+          <p><strong>Outcome:</strong> Simplified experiment discovery and planning, cutting the setup work needed before a test could go live.</p>
+          <div class="stack-list">
+            <span>RAG</span><span>Vector search</span><span>Adobe Target</span><span>Adobe Coworker</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="work-item" id="project-three">
+        <div class="work-visual"><span class="placeholder-fill">[ADD SCREENSHOT]</span></div>
+        <div class="work-body">
+          <h3>Reusable Recommendations component on AEM EDS</h3>
+          <p class="role">Technical Consultant, Adobe · 2023–2024</p>
+          <p><strong>Problem:</strong> Each new web property needed its own custom integration to surface Adobe Target recommendations, duplicating the same work repeatedly.</p>
+          <p><strong>Contribution:</strong> Built a configurable Recommendations component on Adobe Experience Manager's Edge Delivery Services with variation support built in.</p>
+          <p><strong>Outcome:</strong> Made personalized recommendation experiences deployable across web properties without rebuilding the integration each time, contributing to a 20–25% uplift in conversion/engagement across optimization use cases.</p>
+          <div class="stack-list">
+            <span>Adobe Target</span><span>AEM EDS</span><span>Personalization</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="work-item" id="project-four">
+        <div class="work-visual"><span class="placeholder-fill">[ADD SCREENSHOT]</span></div>
+        <div class="work-body">
+          <h3>Customer data pipelines on Adobe Experience Platform</h3>
+          <p class="role">Technical Consultant, Adobe · 2022–Present</p>
+          <p><strong>Problem:</strong> Marketing teams needed a unified, real-time view of customers assembled from multiple upstream systems, with identity spread across sources.</p>
+          <p><strong>Contribution:</strong> Architected XDM schemas (Profile/Event/Lookup), built batch and streaming ingestion, and wrote SQL transformations in Data Distiller for identity stitching, profile unification and audience segmentation.</p>
+          <p><strong>Outcome:</strong> Enabled omnichannel activation and real-time profile enrichment feeding directly into AJO and Target campaigns.</p>
+          <div class="stack-list">
+            <span>AEP</span><span>XDM</span><span>Data Distiller</span><span>SQL</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="work-item" id="project-five">
+        <div class="work-visual"><span class="placeholder-fill">[ADD SCREENSHOT]</span></div>
+        <div class="work-body">
+          <h3>Sales Consultation app — React Native</h3>
+          <p class="role">Technical Consultant, Adobe · 2022–2023</p>
+          <p>Led UI development for a Sales Consultation app in React Native — reusable components, optimized transitions and state management — improving load time by ~20% and lifting user engagement by up to 30%.</p>
+          <div class="stack-list">
+            <span>React Native</span><span>JavaScript</span><span>Performance</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="wrap cta">
+    <p class="label">More</p>
+    <h2 style="margin-block:var(--space-3) var(--space-6)">More small experiments live on GitHub.</h2>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://github.com/Swapnadeep2K">View GitHub profile</a>
+      <a class="btn" href="contact.html">Get in touch</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer wrap">
+  <div class="footer-grid">
+    <div class="footer-links">
+      <a href="https://github.com/Swapnadeep2K">GitHub</a>
+      <a href="https://www.linkedin.com/in/swapnadeep-sarkar">LinkedIn</a>
+      <a href="mailto:swapnamama90@gmail.com">Email</a>
+    </div>
+    <p class="footer-meta">© <span data-year>2026</span> Swapnadeep Sarkar. Built by hand.</p>
+  </div>
+</footer>
+
+</body>
+</html>
