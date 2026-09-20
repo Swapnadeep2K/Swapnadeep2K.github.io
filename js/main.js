@@ -71,6 +71,7 @@
     if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
     setupCursorGlow();
+    setupImagePreview();
   });
 
   // A pointer-following spotlight, tinted via --color-accent so it tracks
@@ -105,6 +106,86 @@
 
     document.addEventListener("mouseleave", function () {
       glow.classList.remove("is-active");
+    });
+  }
+
+  // Click-to-preview for work images on the projects page. Supports multiple
+  // images per project with prev/next navigation.
+  function setupImagePreview() {
+    var preview = document.querySelector("[data-image-preview]");
+    var closeBtn = document.querySelector("[data-image-preview-close]");
+    var previewImg = document.querySelector(".image-preview-img");
+    var prevBtn = document.querySelector("[data-image-prev]");
+    var nextBtn = document.querySelector("[data-image-next]");
+    var counterCurr = document.querySelector("[data-image-current]");
+    var counterTotal = document.querySelector("[data-image-total]");
+    if (!preview) return;
+
+    var currentProject = null;
+    var currentImageIndex = 0;
+    var projectImages = {};
+
+    // Build a map of projects to their images.
+    document.querySelectorAll(".work-item").forEach(function (item) {
+      var projectId = item.id;
+      var images = Array.from(item.querySelectorAll(".work-visual img")).map(function (img) {
+        return { src: img.src, alt: img.alt };
+      });
+      if (images.length > 0) {
+        projectImages[projectId] = images;
+      }
+    });
+
+    var updatePreview = function (projectId, imageIndex) {
+      if (!projectImages[projectId]) return;
+      var images = projectImages[projectId];
+      imageIndex = Math.max(0, Math.min(imageIndex, images.length - 1));
+      currentProject = projectId;
+      currentImageIndex = imageIndex;
+      previewImg.src = images[imageIndex].src;
+      previewImg.alt = images[imageIndex].alt;
+      counterCurr.textContent = String(imageIndex + 1);
+      counterTotal.textContent = String(images.length);
+      prevBtn.disabled = imageIndex === 0;
+      nextBtn.disabled = imageIndex === images.length - 1;
+    };
+
+    var openPreview = function (projectId, imageIndex) {
+      updatePreview(projectId, imageIndex);
+      preview.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    };
+
+    var closePreview = function () {
+      preview.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    };
+
+    document.querySelectorAll(".work-visual img").forEach(function (img) {
+      img.addEventListener("click", function (e) {
+        e.preventDefault();
+        var projectItem = img.closest(".work-item");
+        var projectId = projectItem.id;
+        var imageIndex = Array.from(projectItem.querySelectorAll(".work-visual img")).indexOf(img);
+        openPreview(projectId, imageIndex);
+      });
+    });
+
+    prevBtn.addEventListener("click", function () {
+      if (currentProject) updatePreview(currentProject, currentImageIndex - 1);
+    });
+    nextBtn.addEventListener("click", function () {
+      if (currentProject) updatePreview(currentProject, currentImageIndex + 1);
+    });
+    closeBtn.addEventListener("click", closePreview);
+    preview.addEventListener("click", function (e) {
+      if (e.target === preview) closePreview();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (preview.getAttribute("aria-hidden") !== "false") return;
+      if (e.key === "Escape") closePreview();
+      if (e.key === "ArrowLeft") prevBtn.click();
+      if (e.key === "ArrowRight") nextBtn.click();
     });
   }
 })();

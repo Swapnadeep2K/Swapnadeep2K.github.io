@@ -525,11 +525,29 @@ a.inline-link:hover { text-decoration-color: var(--color-accent); }
   aspect-ratio: 16 / 10;
   background: var(--color-bg-alt);
   border: var(--border);
-  overflow: hidden;
+  overflow: visible;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Stacked card effect — each image sits behind the previous with slight offset */
 }
-.work-visual img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-med) var(--ease); }
-.work-item:hover .work-visual img { transform: scale(1.03); }
+.work-visual img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--color-surface);
+  filter: grayscale(1) contrast(1.02);
+  transition: filter var(--dur-med) var(--ease), transform var(--dur-med) var(--ease);
+  cursor: pointer;
+}
+/* Stack images: first on top, subsequent ones offset down-right */
+.work-visual img:nth-child(1) { z-index: 3; transform: translate(0, 0); }
+.work-visual img:nth-child(2) { z-index: 2; transform: translate(4px, 4px); filter: grayscale(1) contrast(1.02) opacity(0.6); }
+.work-visual img:nth-child(3) { z-index: 1; transform: translate(8px, 8px); filter: grayscale(1) contrast(1.02) opacity(0.3); }
+.work-item:hover .work-visual img { filter: grayscale(0) contrast(1.02); }
+.work-item:hover .work-visual img { filter: grayscale(0) contrast(1.02); }
 .work-visual .placeholder-fill {
   position: absolute; inset: 0;
   display: grid; place-items: center;
@@ -686,6 +704,102 @@ form.contact-form { display: grid; gap: var(--space-5); max-width: 34rem; margin
 }
 @media (prefers-reduced-motion: reduce) {
   .cursor-glow { display: none; }
+}
+
+/* ---------- Image preview modal ---------- */
+.image-preview {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-med) var(--ease), visibility var(--dur-med) var(--ease);
+}
+.image-preview[aria-hidden="false"] {
+  opacity: 1;
+  visibility: visible;
+}
+.image-preview-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.image-preview-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.image-preview-nav {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  z-index: 2;
+}
+.image-preview-nav button {
+  width: 2rem;
+  height: 2rem;
+  background: color-mix(in srgb, rgba(0, 0, 0) 40%, transparent);
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--dur-fast) var(--ease);
+}
+.image-preview-nav button:hover {
+  background: color-mix(in srgb, rgba(0, 0, 0) 60%, transparent);
+}
+.image-preview-nav button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.image-preview-nav button svg {
+  width: 1rem;
+  height: 1rem;
+}
+.image-preview-counter {
+  color: #FFFFFF;
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  white-space: nowrap;
+}
+.image-preview-close {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 2;
+  width: 2rem;
+  height: 2rem;
+  background: color-mix(in srgb, rgba(0, 0, 0) 40%, transparent);
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--dur-fast) var(--ease);
+}
+.image-preview-close:hover {
+  background: color-mix(in srgb, rgba(0, 0, 0) 60%, transparent);
+}
+.image-preview-close svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 /* ---------- Utility ---------- */
