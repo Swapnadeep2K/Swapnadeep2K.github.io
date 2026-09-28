@@ -31,14 +31,17 @@ The site presents my work at the intersection of customer data, personalization,
 │   └── main.js                   Theme toggle, mobile navigation, and footer year
 ├── assets/
 │   ├── favicon.svg               Site icon
-│   ├── og-image.png              Social-sharing image
-│   └── resume.pdf                Downloadable résumé
+│   ├── profile.png               Profile photo
+│   ├── resume.pdf                Downloadable résumé
+│   └── *.png                     Project case-study images
 ├── robots.txt
 ├── sitemap.xml
 ├── .nojekyll
 └── .github/
+    ├── scripts/
+    │   └── generate-sitemap.ps1  Regenerates sitemap.xml lastmod dates
     └── workflows/
-        └── deploy.yml            Optional GitHub Pages deployment workflow
+        └── update-sitemap.yml    Runs the sitemap script on push to master
 ```
 
 ## Key features
@@ -126,11 +129,11 @@ Accessibility considerations include:
 1. Push the repository to GitHub.
 2. Open **Settings → Pages**.
 3. Select **Deploy from a branch**.
-4. Choose `main` and `/ (root)`.
+4. Choose `master` and `/ (root)`.
 
-### Deploy with GitHub Actions
+### Sitemap automation
 
-The optional `.github/workflows/deploy.yml` workflow can deploy the site after every push to `main`. In **Settings → Pages**, select **GitHub Actions** as the source.
+The `.github/workflows/update-sitemap.yml` workflow runs `.github/scripts/generate-sitemap.ps1` on pushes to `master` to keep the `lastmod` dates in `sitemap.xml` current. It does not deploy the site; use **Deploy from a branch** for that.
 
 Because internal links and assets use relative paths, the site can run from either a user site such as `username.github.io` or a project path such as `username.github.io/repository-name`.
 
@@ -138,7 +141,7 @@ Because internal links and assets use relative paths, the site can run from eith
 
 - Remove placeholder copy and inactive links.
 - Confirm project images and their alternative text.
-- Verify that `assets/og-image.png` and the favicon resolve correctly.
+- Verify that the favicon and profile image resolve correctly.
 - Confirm canonical URLs in every page.
 - Update `sitemap.xml` when adding or removing pages.
 - Test both themes and the mobile menu.
