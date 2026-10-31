@@ -1,0 +1,21 @@
+# Local editor settings
+/.vscode/
+/.idea/
+*.swp
+*.swo
+*~
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
+# Logs and temporary files
+/.playwright-mcp/
+*.log
+*.tmp
