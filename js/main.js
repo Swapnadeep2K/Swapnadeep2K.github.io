@@ -8,6 +8,48 @@
 
   var STORAGE_KEY = "site-theme";
   var root = document.documentElement;
+  var activeOverlay = null;
+  var previousOverflow = "";
+
+  function activateOverlay(close) {
+    if (activeOverlay === close) return;
+    if (activeOverlay) activeOverlay(false);
+    previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    activeOverlay = close;
+  }
+
+  function deactivateOverlay(close) {
+    if (activeOverlay !== close) return;
+    document.body.style.overflow = previousOverflow;
+    activeOverlay = null;
+  }
+
+  function trapFocus(event, containers) {
+    var selector = "a[href], button:not([disabled]), input:not([disabled]), " +
+      "select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])";
+    var focusable = [];
+    containers.forEach(function (container) {
+      if (container.matches(selector)) focusable.push(container);
+      container.querySelectorAll(selector).forEach(function (element) {
+        focusable.push(element);
+      });
+    });
+    focusable = focusable.filter(function (element) {
+      return !element.disabled && !element.closest("[inert]") && element.getClientRects().length > 0 &&
+        window.getComputedStyle(element).visibility !== "hidden";
+    });
+    if (!focusable.length) return;
+
+    var index = focusable.indexOf(document.activeElement);
+    if (event.shiftKey && index <= 0) {
+      event.preventDefault();
+      focusable[focusable.length - 1].focus();
+    } else if (!event.shiftKey && (index === -1 || index === focusable.length - 1)) {
+      event.preventDefault();
+      focusable[0].focus();
+    }
+  }
 
   function safeGet(key) {
     try { return window.localStorage.getItem(key); } catch (e) { return null; }
@@ -45,34 +87,102 @@
       toggle.setAttribute("aria-pressed", String(root.getAttribute("data-theme") === "dark"));
     }
 
-    var navToggle = document.querySelector("[data-nav-toggle]");
-    var mobileNav = document.querySelector("[data-mobile-nav]");
-    if (navToggle && mobileNav) {
-      var setNav = function (open) {
-        mobileNav.classList.toggle("is-open", open);
-        navToggle.setAttribute("aria-expanded", String(open));
-        document.body.style.overflow = open ? "hidden" : "";
-      };
-      navToggle.addEventListener("click", function () {
-        setNav(!mobileNav.classList.contains("is-open"));
-      });
-      mobileNav.querySelectorAll("a").forEach(function (link) {
-        link.addEventListener("click", function () { setNav(false); });
-      });
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && mobileNav.classList.contains("is-open")) {
-          setNav(false);
-          navToggle.focus();
-        }
-      });
-    }
+    setupMobileNav();
 
-    var yearEl = document.querySelector("[data-year]");
-    if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+    document.querySelectorAll("[data-year]").forEach(function (yearEl) {
+      yearEl.textContent = String(new Date().getFullYear());
+    });
 
     setupCursorGlow();
     setupImagePreview();
   });
+
+  function setupMobileNav() {
+    var navToggle = document.querySelector("[data-nav-toggle]");
+    var mobileNav = document.querySelector("[data-mobile-nav]");
+    if (!navToggle || !mobileNav) return;
+
+    var header = navToggle.closest(".site-header");
+    if (!header) return;
+    var background = [];
+    mobileNav.inert = true;
+    navToggle.setAttribute("aria-label", "Open menu");
+
+    function closeNav(restoreFocus) {
+      if (!mobileNav.classList.contains("is-open")) return;
+      mobileNav.classList.remove("is-open");
+      mobileNav.inert = true;
+      navToggle.setAttribute("aria-expanded", "false");
+      navToggle.setAttribute("aria-label", "Open menu");
+      background.forEach(function (item) { item.element.inert = item.wasInert; });
+      background = [];
+      deactivateOverlay(closeNav);
+      if (restoreFocus) navToggle.focus();
+    }
+
+    function makeInert(element) {
+      background.push({ element: element, wasInert: element.inert });
+      element.inert = true;
+    }
+
+    function openNav() {
+      if (window.matchMedia("(min-width: 700px)").matches) return;
+      activateOverlay(closeNav);
+      Array.from(document.body.children).forEach(function (element) {
+        if (element !== mobileNav && element !== header) makeInert(element);
+      });
+      header.querySelectorAll("a[href], button:not([disabled]), input:not([disabled]), " +
+        "select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])")
+        .forEach(function (element) {
+          if (element !== navToggle) makeInert(element);
+        });
+      mobileNav.inert = false;
+      mobileNav.classList.add("is-open");
+      navToggle.setAttribute("aria-expanded", "true");
+      navToggle.setAttribute("aria-label", "Close menu");
+      var firstLink = mobileNav.querySelector("a[href]");
+      (firstLink || navToggle).focus();
+    }
+
+    navToggle.addEventListener("click", function () {
+      if (mobileNav.classList.contains("is-open")) closeNav(true);
+      else openNav();
+    });
+    mobileNav.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () { closeNav(false); });
+    });
+    document.addEventListener("keydown", function (event) {
+      if (!mobileNav.classList.contains("is-open")) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeNav(true);
+      } else if (event.key === "Tab") {
+        trapFocus(event, [navToggle, mobileNav]);
+      }
+    });
+    document.addEventListener("focusin", function (event) {
+      if (mobileNav.classList.contains("is-open") &&
+          event.target !== navToggle && !mobileNav.contains(event.target)) {
+        var firstLink = mobileNav.querySelector("a[href]");
+        (firstLink || navToggle).focus();
+      }
+    });
+    window.addEventListener("resize", function () {
+      if (!mobileNav.classList.contains("is-open") ||
+          !window.matchMedia("(min-width: 700px)").matches) return;
+      var focused = document.activeElement;
+      var moveFocus = focused === navToggle || mobileNav.contains(focused);
+      var focusedHref = mobileNav.contains(focused) ? focused.getAttribute("href") : null;
+      closeNav(false);
+      if (moveFocus) {
+        var desktopLinks = Array.from(header.querySelectorAll(".site-nav a"));
+        var target = desktopLinks.find(function (link) {
+          return focusedHref && link.getAttribute("href") === focusedHref;
+        }) || desktopLinks[0] || header.querySelector("[data-theme-toggle]");
+        if (target) target.focus();
+      }
+    });
+  }
 
   // A pointer-following spotlight, tinted via --color-accent so it tracks
   // the active theme. Skipped for touch/no-hover devices and reduced-motion.
@@ -109,8 +219,7 @@
     });
   }
 
-  // Click-to-preview for work images on the projects page. Supports multiple
-  // images per project with prev/next navigation.
+  // Enhance project images with keyboard-accessible preview controls.
   function setupImagePreview() {
     var preview = document.querySelector("[data-image-preview]");
     var closeBtn = document.querySelector("[data-image-preview-close]");
@@ -119,73 +228,94 @@
     var nextBtn = document.querySelector("[data-image-next]");
     var counterCurr = document.querySelector("[data-image-current]");
     var counterTotal = document.querySelector("[data-image-total]");
-    if (!preview) return;
+    if (!preview || !closeBtn || !previewImg || !prevBtn || !nextBtn ||
+        !counterCurr || !counterTotal || typeof preview.showModal !== "function") return;
 
-    var currentProject = null;
+    var currentImages = [];
     var currentImageIndex = 0;
-    var projectImages = {};
+    var opener = null;
 
-    // Build a map of projects to their images.
-    document.querySelectorAll(".work-item").forEach(function (item) {
-      var projectId = item.id;
-      var images = Array.from(item.querySelectorAll(".work-visual img")).map(function (img) {
-        return { src: img.src, alt: img.alt };
-      });
-      if (images.length > 0) {
-        projectImages[projectId] = images;
-      }
-    });
-
-    var updatePreview = function (projectId, imageIndex) {
-      if (!projectImages[projectId]) return;
-      var images = projectImages[projectId];
-      imageIndex = Math.max(0, Math.min(imageIndex, images.length - 1));
-      currentProject = projectId;
+    function updatePreview(imageIndex) {
+      if (!currentImages.length) return;
+      imageIndex = Math.max(0, Math.min(imageIndex, currentImages.length - 1));
       currentImageIndex = imageIndex;
-      previewImg.src = images[imageIndex].src;
-      previewImg.alt = images[imageIndex].alt;
+      var image = currentImages[imageIndex];
+      var focused = document.activeElement;
+      previewImg.src = image.currentSrc || image.src;
+      previewImg.alt = image.alt;
       counterCurr.textContent = String(imageIndex + 1);
-      counterTotal.textContent = String(images.length);
+      counterTotal.textContent = String(currentImages.length);
       prevBtn.disabled = imageIndex === 0;
-      nextBtn.disabled = imageIndex === images.length - 1;
-    };
+      nextBtn.disabled = imageIndex === currentImages.length - 1;
+      if (preview.open && ((focused === prevBtn && prevBtn.disabled) ||
+          (focused === nextBtn && nextBtn.disabled))) {
+        closeBtn.focus();
+      }
+    }
 
-    var openPreview = function (projectId, imageIndex) {
-      updatePreview(projectId, imageIndex);
-      preview.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-    };
+    function openPreview(images, imageIndex, trigger) {
+      activateOverlay(closePreview);
+      currentImages = images;
+      opener = trigger;
+      updatePreview(imageIndex);
+      if (!preview.open) preview.showModal();
+      closeBtn.focus();
+    }
 
-    var closePreview = function () {
-      preview.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-    };
+    function closePreview(restoreFocus) {
+      if (!preview.open) return;
+      preview.close();
+      deactivateOverlay(closePreview);
+      if (restoreFocus && opener) opener.focus();
+    }
 
-    document.querySelectorAll(".work-visual img").forEach(function (img) {
-      img.addEventListener("click", function (e) {
-        e.preventDefault();
-        var projectItem = img.closest(".work-item");
-        var projectId = projectItem.id;
-        var imageIndex = Array.from(projectItem.querySelectorAll(".work-visual img")).indexOf(img);
-        openPreview(projectId, imageIndex);
+    document.querySelectorAll(".work-item").forEach(function (item) {
+      var images = Array.from(item.querySelectorAll(".work-visual img"));
+      images.forEach(function (img, index) {
+        var picture = img.closest("picture");
+        var visual = img.closest(".work-visual");
+        var imageElement = picture && visual.contains(picture) ? picture : img;
+        var trigger = document.createElement("button");
+        trigger.type = "button";
+        trigger.className = "image-preview-trigger";
+        trigger.setAttribute("aria-label", "View larger image: " + img.alt);
+        imageElement.parentNode.insertBefore(trigger, imageElement);
+        trigger.appendChild(imageElement);
+        trigger.addEventListener("click", function () {
+          openPreview(images, index, trigger);
+        });
       });
     });
 
     prevBtn.addEventListener("click", function () {
-      if (currentProject) updatePreview(currentProject, currentImageIndex - 1);
+      updatePreview(currentImageIndex - 1);
     });
     nextBtn.addEventListener("click", function () {
-      if (currentProject) updatePreview(currentProject, currentImageIndex + 1);
+      updatePreview(currentImageIndex + 1);
     });
-    closeBtn.addEventListener("click", closePreview);
-    preview.addEventListener("click", function (e) {
-      if (e.target === preview) closePreview();
+    closeBtn.addEventListener("click", function () { closePreview(true); });
+    preview.addEventListener("click", function (event) {
+      if (event.target === preview) closePreview(true);
     });
-    document.addEventListener("keydown", function (e) {
-      if (preview.getAttribute("aria-hidden") !== "false") return;
-      if (e.key === "Escape") closePreview();
-      if (e.key === "ArrowLeft") prevBtn.click();
-      if (e.key === "ArrowRight") nextBtn.click();
+    preview.addEventListener("cancel", function (event) {
+      event.preventDefault();
+      closePreview(true);
+    });
+    document.addEventListener("focusin", function (event) {
+      if (preview.open && !preview.contains(event.target)) closeBtn.focus();
+    });
+    document.addEventListener("keydown", function (event) {
+      if (!preview.open) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closePreview(true);
+      } else if (event.key === "Tab") {
+        trapFocus(event, [preview]);
+      } else if (event.key === "ArrowLeft" && !prevBtn.disabled) {
+        updatePreview(currentImageIndex - 1);
+      } else if (event.key === "ArrowRight" && !nextBtn.disabled) {
+        updatePreview(currentImageIndex + 1);
+      }
     });
   }
 })();
